@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorandum Inwestycyjne: Rezydencja Magnolia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap');
+        
+        :root {
+            --brand-primary: #065f46;
+            --brand-secondary: #0f172a;
+            --brand-accent: #b45309;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .custom-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--brand-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tab-active {
+            border-bottom: 3px solid var(--brand-primary);
+            color: var(--brand-primary);
+        }
+    </style>
+    <!-- Chosen Palette: Emerald (Stability/Profit) & Slate (Professionalism) with Amber (Luxury/History) -->
+    <!-- Application Structure Plan: 
+         1. Hero Section: Direct impact with key KPIs.
+         2. Navigation: Tabs for: Dashboard, Product Mix, Location, Risk.
+         3. Dynamic Financial Module: Comprehensive calculator with CAPEX/OPEX breakdown.
+         4. Product Section: Analysis of 29 units based on floor plans.
+         5. Legal & Market: Summary of the real estate landscape in Szczawno-Zdrój.
+    -->
+    <!-- Visualization & Content Choices:
+         - Doughnut: Capital allocation (Land vs Dev).
+         - Line/Bar: Sensitivity analysis of profit relative to m2 price.
+         - Interactive Tables: For apartment sizing.
+         - Icons: Unicode for lightweight UI.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-emerald-800 rounded-lg flex items-center justify-center text-white font-bold text-xl">M</div>
+                    <div>
+                        <span class="block text-xl font-bold tracking-tight text-slate-900 serif">MAGNOLIA</span>
+                        <span class="block text-[10px] uppercase tracking-[0.2em] text-emerald-700 font-bold">Szczawno-Zdrój</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-semibold uppercase tracking-wider">
+                    <button onclick="showTab('tab-summary')" class="nav-link tab-active py-7">Podsumowanie</button>
+                    <button onclick="showTab('tab-finance')" class="nav-link py-7">Finanse & ROI</button>
+                    <button onclick="showTab('tab-product')" class="nav-link py-7">Produkt & Rzuty</button>
+                    <button onclick="showTab('tab-strategy')" class="nav-link py-7">Ryzyko & Strategia</button>
+                </div>
+                <div class="text-right hidden sm:block">
+                    <span class="block text-xs text-slate-400 uppercase">Status Projektu</span>
+                    <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">Pozwolenie na budowę</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        <!-- TAB: PODSUMOWANIE (SUMMARY) -->
+        <div id="tab-summary" class="tab-content space-y-10">
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight serif mb-6">Unikalna okazja inwestycyjna w sercu uzdrowiska.</h2>
+                    <p class="text-lg text-slate-600 leading-relaxed mb-8">
+                        Projekt "Magnolia" to rewitalizacja historycznego domu wczasowego przy ul. Kopernika 2. 
+                        Inwestycja łączy zabytkowy charakter architektury z 1914 roku z nowoczesnymi rozwiązaniami deweloperskimi, 
+                        oferując 29 luksusowych apartamentów o łącznej powierzchni PUM 1 910 m².
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="border-l-4 border-emerald-600 pl-4">
+                            <span class="block text-3xl font-bold text-slate-900">4,0 mln</span>
+                            <span class="text-sm text-slate-500 uppercase">Cena zakupu netto</span>
+                        </div>
+                        <div class="border-l-4 border-amber-600 pl-4">
+                            <span class="block text-3xl font-bold text-slate-900">29</span>
+                            <span class="text-sm text-slate-500 uppercase">Apartamentów</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-200 rounded-2xl aspect-video relative overflow-hidden shadow-2xl flex items-center justify-center text-slate-400">
+                    <div class="text-center p-8">
+                        <div class="text-5xl mb-4">🏛️</div>
+                        <p class="italic text-sm">[Wizualizacja historycznej fasady - ul. Kopernika 2]</p>
+                        <p class="text-xs mt-2 uppercase tracking-widest text-slate-500">Szczawno-Zdrój</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-2">Powierzchnia Działki</div>
+                    <div class="text-xl font-bold">3 685 m²</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-2">PUM Całkowity</div>
+                    <div class="text-xl font-bold">1 910 m²</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-2">Liczba kondygnacji</div>
+                    <div class="text-xl font-bold">4 + Piwnica</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-2">Media</div>
+                    <div class="text-xl font-bold">Pełne przyłącza</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: FINANSE (FINANCE) -->
+        <div id="tab-finance" class="tab-content hidden space-y-8">
+            <div class="bg-emerald-900 rounded-3xl p-8 lg:p-12 text-white shadow-2xl">
+                <div class="flex flex-col lg:flex-row gap-12">
+                    <!-- Control Panel -->
+                    <div class="lg:w-1/3 space-y-8">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-6">Kalkulator Marży</h3>
+                            <p class="text-emerald-100/70 text-sm mb-10">Dostosuj parametry rynkowe, aby zweryfikować próg rentowności (Break-even point).</p>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <label class="text-xs font-bold uppercase tracking-widest text-emerald-300">Koszt Adaptacji (zł/m²)</label>
+                                    <span id="display-reno" class="text-lg font-bold">4 200 zł</span>
+                                </div>
+                                <input type="range" id="input-reno" min="3000" max="8000" step="100" value="4200" class="custom-slider">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <label class="text-xs font-bold uppercase tracking-widest text-emerald-300">Cena Sprzedaży (zł/m²)</label>
+                                    <span id="display-sale" class="text-lg font-bold">9 000 zł</span>
+                                </div>
+                                <input type="range" id="input-sale" min="6000" max="16000" step="100" value="9000" class="custom-slider">
+                            </div>
+                            
+                            <div class="pt-6 border-t border-emerald-800">
+                                <div class="flex justify-between text-sm opacity-70">
+                                    <span>Kapitał własny (zakładany):</span>
+                                    <span>20%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visuals -->
+                    <div class="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-white/10 rounded-2xl p-6 border border-white/10 text-center">
+                            <span class="block text-xs uppercase text-emerald-300 mb-2">Prognozowany Zysk Netto</span>
+                            <span id="res-profit" class="text-5xl font-bold block mb-2">-</span>
+                            <span id="res-roi" class="text-xl text-emerald-400 font-semibold">ROI: -</span>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl p-6 border border-white/10">
+                            <div class="chart-container">
+                                <canvas id="financeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl border border-slate-200">
+                    <h4 class="font-bold text-slate-800 mb-4 uppercase text-xs tracking-widest">Analiza Kosztów (CAPEX)</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex justify-between"><span>Zakup gruntu i budynku:</span> <span class="font-bold">4,0 mln</span></li>
+                        <li class="flex justify-between"><span>Budżet budowlany:</span> <span id="li-reno" class="font-bold">-</span></li>
+                        <li class="flex justify-between"><span>Koszty miękkie (Prowizje/Marketing):</span> <span class="font-bold text-slate-400">0,5 mln</span></li>
+                        <li class="pt-3 border-t font-bold flex justify-between text-lg text-emerald-800"><span>Razem:</span> <span id="li-total">-</span></li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200">
+                    <h4 class="font-bold text-slate-800 mb-4 uppercase text-xs tracking-widest text-center">Wrażliwość Zysku na Cenę Metra Kwadratowego</h4>
+                    <div class="chart-container" style="height: 200px;">
+                        <canvas id="sensitivityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: PRODUKT (PRODUCT) -->
+        <div id="tab-product" class="tab-content hidden space-y-10">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                <h2 class="text-2xl font-bold mb-4 serif">Struktura Apartamentów</h2>
+                <p class="text-slate-500 mb-8">Na podstawie analizy dokumentacji projektowej (Magnolia 17_01_2022). Dominują lokale 2-pokojowe, najlepiej rotujące w tej lokalizacji.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-xs uppercase tracking-widest text-slate-400 border-b">
+                                <th class="pb-4 font-semibold">Kondygnacja</th>
+                                <th class="pb-4 font-semibold">Zakres Metraży</th>
+                                <th class="pb-4 font-semibold">Charakterystyka</th>
+                                <th class="pb-4 font-semibold text-right">Liczba lokali</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y">
+                            <tr>
+                                <td class="py-4 font-bold">Parter</td>
+                                <td class="py-4">36 m² – 51 m²</td>
+                                <td class="py-4">Lokale z potencjałem na małe ogródki / tarasy naziemne.</td>
+                                <td class="py-4 text-right font-bold text-emerald-600">8</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 font-bold">I Piętro</td>
+                                <td class="py-4">36 m² – 54 m²</td>
+                                <td class="py-4">Reprezentacyjna część historyczna, wysokie stropy.</td>
+                                <td class="py-4 text-right font-bold text-emerald-600">7</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 font-bold">II Piętro</td>
+                                <td class="py-4">37 m² – 55 m²</td>
+                                <td class="py-4">Optymalne nasłonecznienie, widok na zieleń.</td>
+                                <td class="py-4 text-right font-bold text-emerald-600">7</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 font-bold">III Piętro / Poddasze</td>
+                                <td class="py-4">37 m² – 56 m²</td>
+                                <td class="py-4">Klimatyczne skosy, najwyższy standard (Penthouse-like).</td>
+                                <td class="py-4 text-right font-bold text-emerald-600">7</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-slate-50 font-bold text-slate-900">
+                                <td class="py-4 px-2" colspan="3 text-right">SUMA JEDNOSTEK:</td>
+                                <td class="py-4 text-right px-2">29</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-amber-50 p-6 rounded-xl border border-amber-200">
+                    <h4 class="text-amber-900 font-bold mb-3 uppercase text-xs">Atuty Projektowe (Technical Review)</h4>
+                    <ul class="text-sm text-amber-800 space-y-3 italic">
+                        <li>• "Gotowiec" inwestycyjny — brak konieczności czekania na WZ czy MPZP.</li>
+                        <li>• Projekt przewiduje nowoczesną windę, co jest kluczowe dla klientów 60+.</li>
+                        <li>• Możliwość wydzielenia parkingu na sąsiedniej działce (wliczone w ofertę).</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-900 text-slate-300 p-6 rounded-xl">
+                    <h4 class="text-white font-bold mb-3 uppercase text-xs">Standard Wykończenia (Zalecany)</h4>
+                    <p class="text-xs leading-relaxed">
+                        Zalecamy standard **"Modern Classic"** — zachowanie detali historycznych fasady przy minimalistycznym wnętrzu. 
+                        Szacowany koszt 4200 zł/m² obejmuje części wspólne, elewację, dachy oraz instalacje (bez wykończenia lokali pod klucz).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: STRATEGIA (STRATEGY) -->
+        <div id="tab-strategy" class="tab-content hidden space-y-12">
+            <section>
+                <h2 class="text-2xl font-bold mb-8 serif">Ryzyko i Szanse (Risk Matrix)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 bg-white border border-slate-200 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold mr-3">!</span>
+                            <h4 class="font-bold">Ryzyko: Zabytkowa tkanka (1914)</h4>
+                        </div>
+                        <p class="text-sm text-slate-600">Budynek jest w gminnej ewidencji zabytków. Ryzyko ukrytych wad konstrukcyjnych stropów drewnianych w części starszej. <span class="font-bold text-slate-900">Mitygacja:</span> Profesjonalna inwentaryzacja techniczna przed startem robót.</p>
+                    </div>
+                    <div class="p-6 bg-white border border-slate-200 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <span class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold mr-3">✔</span>
+                            <h4 class="font-bold">Szansa: Silver Economy</h4>
+                        </div>
+                        <p class="text-sm text-slate-600">Szczawno-Zdrój to hub dla zamożnych seniorów. Produkt idealnie wpisuje się w najem średnioterminowy (rehabilitacja) i wakacyjny. <span class="font-bold text-slate-900">Marża:</span> Potencjał na ceny >11k zł/m² przy dobrym marketingu.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-slate-100 p-10 rounded-3xl">
+                <h2 class="text-2xl font-bold mb-6 text-center serif">Harmonogram Ramowy</h2>
+                <div class="flex flex-col md:flex-row justify-between items-start gap-8 relative">
+                    <div class="hidden md:block absolute top-10 left-0 w-full h-0.5 bg-slate-300 z-0"></div>
+                    
+                    <div class="relative z-10 bg-white p-6 rounded-xl border border-slate-200 w-full md:w-1/4">
+                        <div class="text-xs font-bold text-emerald-600 uppercase mb-2">Etap 1</div>
+                        <h5 class="font-bold mb-2">Nabycie & Przygotowanie</h5>
+                        <p class="text-xs text-slate-500">Miesiące: 1-2. Due Diligence techniczne, wybór generalnego wykonawcy.</p>
+                    </div>
+                    <div class="relative z-10 bg-white p-6 rounded-xl border border-slate-200 w-full md:w-1/4">
+                        <div class="text-xs font-bold text-emerald-600 uppercase mb-2">Etap 2</div>
+                        <h5 class="font-bold mb-2">Realizacja Budowlana</h5>
+                        <p class="text-xs text-slate-500">Miesiące: 3-15. Prace konstrukcyjne, dach, elewacja, instalacje.</p>
+                    </div>
+                    <div class="relative z-10 bg-white p-6 rounded-xl border border-slate-200 w-full md:w-1/4">
+                        <div class="text-xs font-bold text-emerald-600 uppercase mb-2">Etap 3</div>
+                        <h5 class="font-bold mb-2">Sprzedaż & Marketing</h5>
+                        <p class="text-xs text-slate-500">Miesiące: 6-18. Aktywna kampania (Wrocław, Warszawa, Berlin).</p>
+                    </div>
+                    <div class="relative z-10 bg-white p-6 rounded-xl border border-slate-200 w-full md:w-1/4">
+                        <div class="text-xs font-bold text-emerald-600 uppercase mb-2">Etap 4</div>
+                        <h5 class="font-bold mb-2">Wyjście / Komercjalizacja</h5>
+                        <p class="text-xs text-slate-500">Miesiące: 18-20. Przekazanie kluczy, zamknięcie funduszu.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-white py-16 px-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+                <h4 class="text-xl font-bold mb-4 serif">Kontakt Inwestycyjny</h4>
+                <p class="text-slate-400 text-sm max-w-sm mb-6">Niniejszy raport nie stanowi oferty handlowej w rozumieniu Art. 66 par. 1 Kodeksu Cywilnego. Analiza została przygotowana dla klienta indywidualnego.</p>
+                <div class="space-y-2 text-sm">
+                    <p>📧 <span class="text-emerald-400">kubapiskorek@gmail.com</span></p>
+                    <p>📞 <span class="text-emerald-400">+48 698 690 891</span></p>
+                </div>
+            </div>
+            <div class="flex flex-col md:items-end">
+                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 inline-block">
+                    <p class="text-xs text-slate-400 uppercase mb-2">Przygotowane przez:</p>
+                    <p class="font-bold text-lg">Jakub Piskorek</p>
+                    <p class="text-xs text-emerald-400">Sztuka Budowania</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- CONSTANTS ---
+        const PUM = 1910;
+        const PURCHASE_PRICE = 4000000;
+        const SOFT_COSTS = 500000; // Marketing, commissions, taxes
+
+        // --- STATE ---
+        let renoPrice = 4200;
+        let salePrice = 9000;
+
+        // --- CHART INSTANCES ---
+        let mainChart, sensChart;
+
+        const money = (val) => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', maximumFractionDigits: 0 }).format(val);
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('tab-active'));
+            event.currentTarget.classList.add('tab-active');
+            
+            // Re-render charts on tab switch to fix sizing
+            if (tabId === 'tab-finance') {
+                updateVisuals();
+            }
+        }
+
+        function calculate() {
+            renoPrice = parseInt(document.getElementById('input-reno').value);
+            salePrice = parseInt(document.getElementById('input-sale').value);
+
+            document.getElementById('display-reno').innerText = money(renoPrice);
+            document.getElementById('display-sale').innerText = money(salePrice);
+
+            const totalReno = renoPrice * PUM;
+            const totalCapex = PURCHASE_PRICE + totalReno + SOFT_COSTS;
+            const totalRevenue = salePrice * PUM;
+            const profit = totalRevenue - totalCapex;
+            const roi = (profit / totalCapex) * 100;
+
+            document.getElementById('res-profit').innerText = money(profit);
+            document.getElementById('res-roi').innerText = `ROI: ${roi.toFixed(1)}%`;
+            
+            // Update table items
+            document.getElementById('li-reno').innerText = money(totalReno);
+            document.getElementById('li-total').innerText = money(totalCapex);
+
+            // Update Color
+            const profEl = document.getElementById('res-profit');
+            profEl.className = profit >= 0 ? "text-5xl font-bold block mb-2" : "text-5xl font-bold block mb-2 text-red-400";
+
+            return { profit, totalReno, totalCapex };
+        }
+
+        function updateVisuals() {
+            const { profit, totalReno, totalCapex } = calculate();
+
+            // Main Cost Chart Update
+            mainChart.data.datasets[0].data = [PURCHASE_PRICE, totalReno, SOFT_COSTS];
+            mainChart.update();
+
+            // Sensitivity Chart Update
+            const steps = [-2000, -1000, 0, 1000, 2000, 3000];
+            const data = steps.map(s => {
+                const sPrice = salePrice + s;
+                return (sPrice * PUM) - totalCapex;
+            });
+            sensChart.data.labels = steps.map(s => money(salePrice + s));
+            sensChart.data.datasets[0].data = data;
+            sensChart.data.datasets[0].backgroundColor = data.map(v => v >= 0 ? '#10b981' : '#ef4444');
+            sensChart.update();
+        }
+
+        function initCharts() {
+            const ctx1 = document.getElementById('financeChart').getContext('2d');
+            mainChart = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Grunt/Budynek', 'Remont/Budowa', 'Koszty miękkie'],
+                    datasets: [{
+                        data: [PURCHASE_PRICE, renoPrice * PUM, SOFT_COSTS],
+                        backgroundColor: ['#b45309', '#059669', '#334155'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: 'white', font: { size: 10 } } } }
+                }
+            });
+
+            const ctx2 = document.getElementById('sensitivityChart').getContext('2d');
+            sensChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Zysk Netto',
+                        data: [],
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false },
+                        x: { ticks: { font: { size: 9 }, color: '#94a3b8' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Listeners
+        document.getElementById('input-reno').addEventListener('input', updateVisuals);
+        document.getElementById('input-sale').addEventListener('input', updateVisuals);
+
+        window.onload = () => {
+            initCharts();
+            updateVisuals();
+        };
+
+    </script>
+</body>
+</html>
